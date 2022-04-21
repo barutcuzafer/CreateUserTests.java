@@ -10,14 +10,14 @@ import java.util.Map;
 
 public class GoRestService extends BaseService {
 
+    public static String endPoint="/public/v1/users";
+
     public static Response createUser(final CreateUserModel createUserModel){
         return defaultRequestSpecification()
                 .body(createUserModel)
                 .when()
-                .post("/public/v1/users");
+                .post(endPoint);
     }
-
-
 
 
 
@@ -26,9 +26,8 @@ public class GoRestService extends BaseService {
     public static Response get_User_Data(final int ID){
         return defaultRequestSpecification()
                 .given().pathParam("id",ID)
-                .when().get("/public/v1/users/{id}");
+                .when().get(endPoint+"/{id}");
     }
-
 
 
 
@@ -45,26 +44,20 @@ public class GoRestService extends BaseService {
         return defaultRequestSpecification()
                 .given().pathParam("id",ID)
                 .and().body(updateMap)
-                .when().put("/public/v1/users/{id}");
+                .when().put(endPoint+"/{id}");
     }
 
 
 
 
 
-
-
-
     public static Response update_User_Data_With_Patch(final int ID){
-        Map<String,Object>updateMap2=new HashMap<>();
-        updateMap2.put("gender","female");
+        Map<String,Object>updateGender=new HashMap<>();
+        updateGender.put("gender","female");
 
         return defaultRequestSpecification().given().pathParam("id",ID)
-                .and().body(updateMap2)
-                .when().patch("/public/v1/users/{id}");
-
-
-
+                .and().body(updateGender)
+                .when().patch(endPoint+"/{id}");
 
 
 
@@ -73,10 +66,12 @@ public class GoRestService extends BaseService {
     public static Response delete_User_Data(final int ID){
         return defaultRequestSpecification().given()
                 .pathParam("id",ID)
-                .when().delete("/public/v1/users/{id}");
+                .when().delete(endPoint+"/{id}");
 
 
     }
+
+
 
 
 
