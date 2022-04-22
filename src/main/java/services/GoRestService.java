@@ -2,7 +2,6 @@ package services;
 
 import io.restassured.response.Response;
 import models.CreateUserModel;
-import org.hamcrest.Matchers;
 
 import java.util.HashMap;
 import java.util.Map;
