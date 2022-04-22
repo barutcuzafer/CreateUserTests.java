@@ -6,7 +6,7 @@ import models.CreateUserModel;
 import java.util.HashMap;
 import java.util.Map;
 
-import static utils.TestConstants.v2_END_POiNT;
+import static utils.TestConstants.*;
 
 
 public class GoRestService extends BaseService {
@@ -21,7 +21,7 @@ public class GoRestService extends BaseService {
 
     public static Response getAllUsers(){
         return defaultRequestSpecification()
-                .when().get(v2_END_POiNT);
+                .when().get(v1_END_POiNT);
     }
 
 
@@ -45,7 +45,7 @@ public class GoRestService extends BaseService {
         return defaultRequestSpecification()
                 .given().pathParam("id",ID)
                 .and().body(updateMap)
-                .when().put(v2_END_POiNT+"/{ID}");
+                .when().put(v2_END_POiNT+"/{id}");
     }
 
 
@@ -61,10 +61,10 @@ public class GoRestService extends BaseService {
 
 
     }
-    public static Response delete_User_Data(final int ID){
+    public static Response delete_User_Data(int ID){
         return defaultRequestSpecification().given()
                 .pathParam("id",ID)
-                .when().delete(v2_END_POiNT + "/" +ID);
+                .when().delete(v2_END_POiNT + "/{id}");
 
 
     }
