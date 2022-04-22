@@ -1,12 +1,12 @@
-
 import io.restassured.response.Response;
 import models.CreateUserModel;
 import org.junit.jupiter.api.Test;
 import services.GoRestService;
-
+import java.util.HashMap;
+import java.util.Map;
 import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static utils.Assertions.assertCommonResponse;
 
 public class CreateUserTests {
 
@@ -19,6 +19,13 @@ public class CreateUserTests {
                 .body("data.name", equalTo(createUserModel.getName()))
                 .body("data.email",equalTo(createUserModel.getEmail()));
     }
+
+
+
+    @Test
+    public void get_All_Users_Info(){
+        GoRestService.getAllUsers().prettyPrint();
+    }
     //--------------------------CRUD OPERATIONS FLOW-------------------------//
 
     //Create a new user with POST method
@@ -26,18 +33,11 @@ public class CreateUserTests {
     public void post_NewUser_And_Get_Id(){
 
         final CreateUserModel createUserModel = new CreateUserModel("Gino Paloma", "male", "Gino.Paloma5@test.com", "active");
-
         Response response=GoRestService.createUser(createUserModel);//Initializing response object
-        response.prettyPrint();
 
-        int ID=response.jsonPath().getInt("data.id"); //retrieving new created user ID with jsonPath() method
-       //assertions with junit
-       assertEquals(SC_CREATED,response.getStatusCode());
-       assertEquals(createUserModel.getName(),response.jsonPath().getString("data.name"));
-       assertEquals(createUserModel.getGender(),response.jsonPath().getString("data.gender"));
-       assertEquals(createUserModel.getEmail(),response.jsonPath().getString("data.email"));
-       assertEquals(createUserModel.getStatus(),response.jsonPath().getString("data.status"));
-
+        int ID=response.jsonPath().getInt("data.id"); //retrieving new created user ID with jsonPath() method to use for next operations
+        System.out.println("ID = " + ID);
+        assertCommonResponse(response,SC_CREATED, createUserModel.getName(), createUserModel.getEmail(), createUserModel.getGender(), createUserModel.getStatus());
 
     }
 
@@ -45,8 +45,8 @@ public class CreateUserTests {
     @Test
     public void get_Users_Success(){
         //print user data
-       GoRestService.get_User_Data(4529).prettyPrint();
-       //validation with Hamcrest Matchers
+        GoRestService.get_User_Data(4529).prettyPrint();
+        //validation with Hamcrest Matchers
         GoRestService.get_User_Data(4529)
                .then().statusCode(SC_OK)
                 .and().body("data.id",equalTo(4529));
@@ -63,18 +63,24 @@ public class CreateUserTests {
         GoRestService.update_User_Data_With_Put(4529,"Gino Paloma","male","active","palomagina@gmail.com")
                 .then().statusCode(SC_OK)//It should have returned 204 but 200
                 .and().body("data.email",equalTo("palomagina@gmail.com"));
+
+        //Run GET method one again to make sure
     }
 
 
     //Update status with PATCH method
     @Test
     public void patch_Users_Update(){
-        //update and print the response payload
-        GoRestService.update_User_Data_With_Patch(4529).prettyPrint();
-        //validation with Hamcrest Matchers
-        GoRestService.update_User_Data_With_Patch(4529).then()
-              .statusCode(SC_OK) //It should have returned 204 but 200
-                .body("data.gender",equalTo("female"));
+        //create a map for update_User_Data_With_Patch method
+        Map<String,Object> patchMap=new HashMap<>();
+        patchMap.put("email","patchmail@gmail.com");
+
+        GoRestService.update_User_Data_With_Patch(4529,patchMap)
+                .then().statusCode(SC_NO_CONTENT)
+                .and().body("data.email",equalTo("patchmail@gmail.com"));
+
+
+        //Run GET method one again to make sure
     }
 
     //Delete user with DELETE method

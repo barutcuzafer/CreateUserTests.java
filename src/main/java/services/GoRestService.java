@@ -2,31 +2,32 @@ package services;
 
 import io.restassured.response.Response;
 import models.CreateUserModel;
-import org.hamcrest.Matchers;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static utils.TestConstants.v2_END_POiNT;
+
 
 public class GoRestService extends BaseService {
 
-    public static String endPoint="/public/v1/users";
 
     public static Response createUser(final CreateUserModel createUserModel){
         return defaultRequestSpecification()
                 .body(createUserModel)
                 .when()
-                .post(endPoint);
+                .post(v2_END_POiNT);
     }
 
-
-
+    public static Response getAllUsers(){
+        return defaultRequestSpecification()
+                .when().get(v2_END_POiNT);
+    }
 
 
     public static Response get_User_Data(final int ID){
         return defaultRequestSpecification()
-                .given().pathParam("id",ID)
-                .when().get(endPoint+"/{id}");
+                .when().get(v2_END_POiNT+"/"+ID);
     }
 
 
@@ -44,20 +45,17 @@ public class GoRestService extends BaseService {
         return defaultRequestSpecification()
                 .given().pathParam("id",ID)
                 .and().body(updateMap)
-                .when().put(endPoint+"/{id}");
+                .when().put(v2_END_POiNT+"/{ID}");
     }
 
 
 
 
 
-    public static Response update_User_Data_With_Patch(final int ID){
-        Map<String,Object>updateGender=new HashMap<>();
-        updateGender.put("gender","female");
-
-        return defaultRequestSpecification().given().pathParam("id",ID)
-                .and().body(updateGender)
-                .when().patch(endPoint+"/{id}");
+    public static Response update_User_Data_With_Patch(final int ID,Map map){
+        return defaultRequestSpecification().given().
+                body(map)
+                .when().patch(v2_END_POiNT + "/" + ID);
 
 
 
@@ -66,7 +64,7 @@ public class GoRestService extends BaseService {
     public static Response delete_User_Data(final int ID){
         return defaultRequestSpecification().given()
                 .pathParam("id",ID)
-                .when().delete(endPoint+"/{id}");
+                .when().delete(v2_END_POiNT + "/" +ID);
 
 
     }
