@@ -21,7 +21,7 @@ public class GoRestService extends BaseService {
 
     public static Response getAllUsers(){
         return defaultRequestSpecification()
-                .when().get(v1_END_POiNT);
+                .when().get(v2_END_POiNT);
     }
 
 

@@ -24,6 +24,7 @@ public class CreateUserTests {
 
 
     @Test
+    //Get all users info
     public void get_All_Users_Info(){
         GoRestService.getAllUsers().prettyPrint();
     }
